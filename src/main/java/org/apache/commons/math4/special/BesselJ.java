@@ -17,13 +17,13 @@
 
 package org.apache.commons.math4.special;
 
+import java.util.Arrays;
 import org.apache.commons.numbers.gamma.Gamma;
 import org.apache.commons.math4.analysis.UnivariateFunction;
 import org.apache.commons.math4.exception.ConvergenceException;
 import org.apache.commons.math4.exception.MathIllegalArgumentException;
 import org.apache.commons.math4.exception.util.LocalizedFormats;
 import org.apache.commons.math4.util.FastMath;
-import org.apache.commons.math4.util.MathArrays;
 
 /**
  * This class provides computation methods related to Bessel
@@ -205,7 +205,7 @@ public class BesselJ
          * @param n count of valid values
          */
         public BesselJResult(double[] b, int n) {
-            vals = MathArrays.copyOf(b, b.length);
+            vals = Arrays.copyOf(b, b.length);
             nVals = n;
         }
 
@@ -213,7 +213,7 @@ public class BesselJ
          * @return the computed function values
          */
         public double[] getVals() {
-            return MathArrays.copyOf(vals, vals.length);
+            return Arrays.copyOf(vals, vals.length);
         }
 
         /**
@@ -373,7 +373,7 @@ public class BesselJ
                     capq = (capq + 1) * ((gnu * gnu) - 1) * (0.125 / x);
                     b[i - 1] = xc * (capp * vcos - capq * vsin);
                     if (nb == 1) {
-                        return new BesselJResult(MathArrays.copyOf(b, b.length),
+                        return new BesselJResult(Arrays.copyOf(b, b.length),
                                                  ncalc);
                     }
                     t = vsin;
@@ -644,6 +644,6 @@ public class BesselJ
             }
             ncalc = FastMath.min(nb, 0) - 1;
         }
-        return new BesselJResult(MathArrays.copyOf(b, b.length), ncalc);
+        return new BesselJResult(Arrays.copyOf(b, b.length), ncalc);
     }
 }

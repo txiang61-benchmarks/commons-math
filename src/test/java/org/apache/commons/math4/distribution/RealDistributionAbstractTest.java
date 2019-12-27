@@ -25,11 +25,11 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import org.apache.commons.statistics.distribution.ContinuousDistribution;
 import org.apache.commons.math4.TestUtils;
 import org.apache.commons.math4.analysis.UnivariateFunction;
 import org.apache.commons.math4.analysis.integration.BaseAbstractUnivariateIntegrator;
 import org.apache.commons.math4.analysis.integration.IterativeLegendreGaussIntegrator;
-import org.apache.commons.math4.distribution.RealDistribution;
 import org.apache.commons.math4.exception.MathIllegalArgumentException;
 import org.apache.commons.math4.exception.NumberIsTooLargeException;
 import org.apache.commons.rng.simple.RandomSource;
@@ -40,7 +40,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Abstract base class for {@link RealDistribution} tests.
+ * Abstract base class for {@link ContinuousDistribution} tests.
  * <p>
  * To create a concrete test class for a continuous distribution
  * implementation, first implement makeDistribution() to return a distribution
@@ -76,7 +76,7 @@ public abstract class RealDistributionAbstractTest {
 
 //-------------------- Private test instance data -------------------------
     /**  Distribution instance used to perform tests */
-    private RealDistribution distribution;
+    private ContinuousDistribution distribution;
 
     /** Tolerance used in comparing expected and returned values */
     private double tolerance = 1E-4;
@@ -102,7 +102,7 @@ public abstract class RealDistributionAbstractTest {
     //-------------------- Abstract methods -----------------------------------
 
     /** Creates the default continuous distribution instance to use in tests. */
-    public abstract RealDistribution makeDistribution();
+    public abstract ContinuousDistribution makeDistribution();
 
     /** Creates the default cumulative probability test input values */
     public abstract double[] makeCumulativeTestPoints();
@@ -329,7 +329,7 @@ public abstract class RealDistributionAbstractTest {
     @Test
     public void testSampler() {
         final int sampleSize = 1000;
-        final RealDistribution.Sampler sampler =
+        final ContinuousDistribution.Sampler sampler =
             distribution.createSampler(RandomSource.create(RandomSource.WELL_19937_C, 123456789L));
         final double[] sample = AbstractRealDistribution.sample(sampleSize, sampler);
         final double[] quartiles = TestUtils.getDistributionQuartiles(distribution);
@@ -390,11 +390,11 @@ public abstract class RealDistributionAbstractTest {
         // generator, using a fixed seed for deterministic results.
         final long seed = 123;
         RandomSource source = RandomSource.WELL_512_A;
-        RealDistribution.Sampler origSampler = distribution.createSampler(RandomSource.create(source, seed));
+        ContinuousDistribution.Sampler origSampler = distribution.createSampler(RandomSource.create(source, seed));
 
         // Clone the distribution.
-        final RealDistribution cloned = deepClone();
-        RealDistribution.Sampler clonedSampler = cloned.createSampler(RandomSource.create(source, seed));
+        final ContinuousDistribution cloned = deepClone();
+        ContinuousDistribution.Sampler clonedSampler = cloned.createSampler(RandomSource.create(source, seed));
 
         // Make sure they still produce the same samples.
         Assert.assertEquals(origSampler.sample(),
@@ -442,14 +442,14 @@ public abstract class RealDistributionAbstractTest {
     /**
      * @return Returns the distribution.
      */
-    protected RealDistribution getDistribution() {
+    protected ContinuousDistribution getDistribution() {
         return distribution;
     }
 
     /**
      * @param distribution The distribution to set.
      */
-    protected void setDistribution(RealDistribution distribution) {
+    protected void setDistribution(ContinuousDistribution distribution) {
         this.distribution = distribution;
     }
 
@@ -498,7 +498,7 @@ public abstract class RealDistributionAbstractTest {
     /**
      * Serialization and deserialization loop of the {@link #distribution}.
      */
-    private RealDistribution deepClone()
+    private ContinuousDistribution deepClone()
         throws IOException,
                ClassNotFoundException {
         // Serialize to byte array.
@@ -513,6 +513,6 @@ public abstract class RealDistributionAbstractTest {
         final Object clone = oIn.readObject();
         oIn.close();
 
-        return (RealDistribution) clone;
+        return (ContinuousDistribution) clone;
     }
 }

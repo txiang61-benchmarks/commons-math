@@ -76,7 +76,7 @@ public abstract class AbstractRealMatrix
     @Override
     public RealMatrix add(RealMatrix m)
         throws MatrixDimensionMismatchException {
-        MatrixUtils.checkAdditionCompatible(this, m);
+        checkAdd(m);
 
         final int rowCount    = getRowDimension();
         final int columnCount = getColumnDimension();
@@ -94,7 +94,7 @@ public abstract class AbstractRealMatrix
     @Override
     public RealMatrix subtract(final RealMatrix m)
         throws MatrixDimensionMismatchException {
-        MatrixUtils.checkSubtractionCompatible(this, m);
+        checkAdd(m);
 
         final int rowCount    = getRowDimension();
         final int columnCount = getColumnDimension();
@@ -142,7 +142,7 @@ public abstract class AbstractRealMatrix
     @Override
     public RealMatrix multiply(final RealMatrix m)
         throws DimensionMismatchException {
-        MatrixUtils.checkMultiplicationCompatible(this, m);
+        checkMultiply(m);
 
         final int nRows = getRowDimension();
         final int nCols = m.getColumnDimension();
@@ -657,28 +657,6 @@ public abstract class AbstractRealMatrix
 
         return out;
     }
-
-    /** {@inheritDoc} */
-    @Override
-    public boolean isSquare() {
-        return getColumnDimension() == getRowDimension();
-    }
-
-    /**
-     * Returns the number of rows of this matrix.
-     *
-     * @return the number of rows.
-     */
-    @Override
-    public abstract int getRowDimension();
-
-    /**
-     * Returns the number of columns of this matrix.
-     *
-     * @return the number of columns.
-     */
-    @Override
-    public abstract int getColumnDimension();
 
     /** {@inheritDoc} */
     @Override

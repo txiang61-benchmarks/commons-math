@@ -18,6 +18,7 @@ package org.apache.commons.math4.distribution;
 
 import java.io.Serializable;
 
+import org.apache.commons.statistics.distribution.ContinuousDistribution;
 import org.apache.commons.math4.analysis.UnivariateFunction;
 import org.apache.commons.math4.analysis.solvers.UnivariateSolverUtils;
 import org.apache.commons.math4.exception.NumberIsTooLargeException;
@@ -36,7 +37,8 @@ import org.apache.commons.math4.util.FastMath;
  *
  * <p>
  * This base class provides a default factory method for creating
- * a {@link RealDistribution.Sampler sampler instance} that uses the
+ * a {@link org.apache.commons.statistics.distribution.ContinuousDistribution.Sampler
+ * sampler instance} that uses the
  * <a href="http://en.wikipedia.org/wiki/Inverse_transform_sampling">
  * inversion method</a> for generating random samples that follow the
  * distribution.
@@ -45,7 +47,8 @@ import org.apache.commons.math4.util.FastMath;
  * @since 3.0
  */
 public abstract class AbstractRealDistribution
-    implements RealDistribution, Serializable {
+    implements ContinuousDistribution,
+               Serializable {
     /** Default absolute accuracy for inverse cumulative computation. */
     public static final double SOLVER_DEFAULT_ABSOLUTE_ACCURACY = 1e-6;
     /** Serializable version identifier */
@@ -130,8 +133,8 @@ public abstract class AbstractRealDistribution
             return upperBound;
         }
 
-        final double mu = getNumericalMean();
-        final double sig = FastMath.sqrt(getNumericalVariance());
+        final double mu = getMean();
+        final double sig = FastMath.sqrt(getVariance());
         final boolean chebyshevApplies;
         chebyshevApplies = !(Double.isInfinite(mu) || Double.isNaN(mu) ||
                              Double.isInfinite(sig) || Double.isNaN(sig));
@@ -234,7 +237,7 @@ public abstract class AbstractRealDistribution
      * @return an array of size {@code n}.
      */
     public static double[] sample(int n,
-                                  RealDistribution.Sampler sampler) {
+                                  ContinuousDistribution.Sampler sampler) {
         final double[] samples = new double[n];
         for (int i = 0; i < n; i++) {
             samples[i] = sampler.sample();
@@ -244,8 +247,8 @@ public abstract class AbstractRealDistribution
 
     /**{@inheritDoc} */
     @Override
-    public RealDistribution.Sampler createSampler(final UniformRandomProvider rng) {
-        return new RealDistribution.Sampler() {
+    public ContinuousDistribution.Sampler createSampler(final UniformRandomProvider rng) {
+        return new ContinuousDistribution.Sampler() {
             /**
              * Inversion method distribution sampler.
              */

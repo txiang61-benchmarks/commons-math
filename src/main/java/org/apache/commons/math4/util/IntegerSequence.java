@@ -17,6 +17,7 @@
 package org.apache.commons.math4.util;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import org.apache.commons.math4.exception.MaxCountExceededException;
 import org.apache.commons.math4.exception.NullArgumentException;
 import org.apache.commons.math4.exception.MathUnsupportedOperationException;
@@ -318,10 +319,11 @@ public class IntegerSequence {
                 throw new NotStrictlyPositiveException(nTimes);
             }
 
+            count += nTimes * increment;
+
             if (!canIncrement(0)) {
                 maxCountCallback.trigger(maximalCount);
             }
-            count += nTimes * increment;
         }
 
         /**
@@ -351,9 +353,14 @@ public class IntegerSequence {
         /** {@inheritDoc} */
         @Override
         public Integer next() {
-            final int value = count;
-            increment();
-            return value;
+            if (canIncrement(0)) {
+                final int value = count;
+                count += increment;
+                return value;
+            } else {
+                // Contract for "Iterator".
+                throw new NoSuchElementException();
+            }
         }
 
         /**

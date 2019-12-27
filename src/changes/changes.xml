@@ -47,13 +47,50 @@ If the output is not quite correct, check for invisible trailing spaces!
 
 <document>
   <properties>
-    <title>Commons Math Release Notes</title>
+    <title>Apache Commons Math Release Notes</title>
   </properties>
   <body>
     <release version="TBD" date="TBD" description="TBD">
     </release>
 
     <release version="4.0" date="XXXX-XX-XX" description="">
+      <action dev="erans" type="fix" issue="MATH-1388">
+        Avoid overflow.
+      </action>
+      <action dev="erans" type="update" issue="MATH-1362">
+        Removed deprecated class "Incrementor" (replaced by "IntegerSequence.Incrementor").
+      </action>
+      <action dev="erans" type="update" issue="MATH-1506">
+        Removed class "MultidimensionalCounter" (ported to "Commons Numbers").
+      </action>
+      <action dev="erans" type="update" issue="MATH-1504">
+        Removed class "BigFraction" (ported to "Commons Numbers").
+      </action>
+      <action dev="erans" type="update" issue="MATH-1446">
+        Removed class "Fraction" (ported to "Commons Numbers").
+      </action>
+      <action dev="erans" type="update" issue="MATH-1469">
+        Removed most codes in package "o.a.c.m.geometry".
+        "Commons Math" now depends on "Commons Geometry".
+      </action>
+      <action dev="erans" type="update" issue="MATH-1481" due-to="Théophile Charmont">
+        "SobolSequenceGenerator": Update data file.
+      </action>
+      <action dev="erans" type="fix" issue="MATH-1401" due-to="Michele De Stefano">
+        "ClopperPearsonInterval": Missing cases.
+      </action>
+      <action dev="erans" type="add" issue="MATH-1477" due-to="Chee Sing Lee">
+        "MillerUpdatingRegression": Fixed "ArrayIndexOutOfBounds" exception.
+      </action>
+      <action dev="erans" type="fix" issue="MATH-1463">
+        "IntegerSequence.incrementor": Throw "NoSuchElementException" from "next" method.
+      </action>
+      <action dev="erans" type="add" issue="MATH-1459" due-to="Adrian Porter">
+        Create a way to automatically calculate a Jacobian matrix using a differentiator.
+      </action>
+      <action dev="erans" type="fix" issue="MATH-1458" due-to="Alex Herbert">
+        "SimpsonIntegrator": Fixed iteration.
+      </action>
       <action dev="erans" type="add" issue="MATH-1426" due-to="Karl Richter">
         "DescriptiveStatistics": allow "Double[]" as initializer.
       </action>

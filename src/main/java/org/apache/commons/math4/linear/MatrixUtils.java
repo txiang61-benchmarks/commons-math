@@ -32,8 +32,6 @@ import org.apache.commons.math4.exception.NumberIsTooSmallException;
 import org.apache.commons.math4.exception.OutOfRangeException;
 import org.apache.commons.math4.exception.ZeroException;
 import org.apache.commons.math4.exception.util.LocalizedFormats;
-import org.apache.commons.math4.fraction.BigFraction;
-import org.apache.commons.math4.fraction.Fraction;
 import org.apache.commons.math4.util.FastMath;
 import org.apache.commons.math4.util.MathArrays;
 import org.apache.commons.math4.util.MathUtils;
@@ -105,7 +103,7 @@ public class MatrixUtils {
     }
 
     /**
-     * Returns a {@link RealMatrix} whose entries are the the values in the
+     * Returns a {@link RealMatrix} whose entries are the values in the
      * the input array.
      * <p>The type of matrix returned depends on the dimension. Below
      * 2<sup>12</sup> elements (i.e. 4096 elements or 64&times;64 for a
@@ -136,7 +134,7 @@ public class MatrixUtils {
     }
 
     /**
-     * Returns a {@link FieldMatrix} whose entries are the the values in the
+     * Returns a {@link FieldMatrix} whose entries are the values in the
      * the input array.
      * <p>The type of matrix returned depends on the dimension. Below
      * 2<sup>12</sup> elements (i.e. 4096 elements or 64&times;64 for a
@@ -532,8 +530,6 @@ public class MatrixUtils {
             throw new NumberIsTooSmallException(LocalizedFormats.INITIAL_COLUMN_AFTER_FINAL_COLUMN,
                                                 endColumn, startColumn, false);
         }
-
-
     }
 
     /**
@@ -582,13 +578,8 @@ public class MatrixUtils {
      * @throws MatrixDimensionMismatchException if the matrices are not addition
      * compatible.
      */
-    public static void checkAdditionCompatible(final AnyMatrix left, final AnyMatrix right)
-        throws MatrixDimensionMismatchException {
-        if ((left.getRowDimension()    != right.getRowDimension()) ||
-            (left.getColumnDimension() != right.getColumnDimension())) {
-            throw new MatrixDimensionMismatchException(left.getRowDimension(), left.getColumnDimension(),
-                                                       right.getRowDimension(), right.getColumnDimension());
-        }
+    public static void checkAdditionCompatible(final AnyMatrix left, final AnyMatrix right) {
+        left.checkAdd(right);
     }
 
     /**
@@ -599,13 +590,8 @@ public class MatrixUtils {
      * @throws MatrixDimensionMismatchException if the matrices are not addition
      * compatible.
      */
-    public static void checkSubtractionCompatible(final AnyMatrix left, final AnyMatrix right)
-        throws MatrixDimensionMismatchException {
-        if ((left.getRowDimension()    != right.getRowDimension()) ||
-            (left.getColumnDimension() != right.getColumnDimension())) {
-            throw new MatrixDimensionMismatchException(left.getRowDimension(), left.getColumnDimension(),
-                                                       right.getRowDimension(), right.getColumnDimension());
-        }
+    public static void checkSubtractionCompatible(final AnyMatrix left, final AnyMatrix right) {
+        left.checkAdd(right);
     }
 
     /**
@@ -616,101 +602,8 @@ public class MatrixUtils {
      * @throws DimensionMismatchException if matrices are not multiplication
      * compatible.
      */
-    public static void checkMultiplicationCompatible(final AnyMatrix left, final AnyMatrix right)
-        throws DimensionMismatchException {
-
-        if (left.getColumnDimension() != right.getRowDimension()) {
-            throw new DimensionMismatchException(left.getColumnDimension(),
-                                                 right.getRowDimension());
-        }
-    }
-
-    /**
-     * Convert a {@link FieldMatrix}/{@link Fraction} matrix to a {@link RealMatrix}.
-     * @param m Matrix to convert.
-     * @return the converted matrix.
-     */
-    public static Array2DRowRealMatrix fractionMatrixToRealMatrix(final FieldMatrix<Fraction> m) {
-        final FractionMatrixConverter converter = new FractionMatrixConverter();
-        m.walkInOptimizedOrder(converter);
-        return converter.getConvertedMatrix();
-    }
-
-    /** Converter for {@link FieldMatrix}/{@link Fraction}. */
-    private static class FractionMatrixConverter extends DefaultFieldMatrixPreservingVisitor<Fraction> {
-        /** Converted array. */
-        private double[][] data;
-        /** Simple constructor. */
-        FractionMatrixConverter() {
-            super(Fraction.ZERO);
-        }
-
-        /** {@inheritDoc} */
-        @Override
-        public void start(int rows, int columns,
-                          int startRow, int endRow, int startColumn, int endColumn) {
-            data = new double[rows][columns];
-        }
-
-        /** {@inheritDoc} */
-        @Override
-        public void visit(int row, int column, Fraction value) {
-            data[row][column] = value.doubleValue();
-        }
-
-        /**
-         * Get the converted matrix.
-         *
-         * @return the converted matrix.
-         */
-        Array2DRowRealMatrix getConvertedMatrix() {
-            return new Array2DRowRealMatrix(data, false);
-        }
-
-    }
-
-    /**
-     * Convert a {@link FieldMatrix}/{@link BigFraction} matrix to a {@link RealMatrix}.
-     *
-     * @param m Matrix to convert.
-     * @return the converted matrix.
-     */
-    public static Array2DRowRealMatrix bigFractionMatrixToRealMatrix(final FieldMatrix<BigFraction> m) {
-        final BigFractionMatrixConverter converter = new BigFractionMatrixConverter();
-        m.walkInOptimizedOrder(converter);
-        return converter.getConvertedMatrix();
-    }
-
-    /** Converter for {@link FieldMatrix}/{@link BigFraction}. */
-    private static class BigFractionMatrixConverter extends DefaultFieldMatrixPreservingVisitor<BigFraction> {
-        /** Converted array. */
-        private double[][] data;
-        /** Simple constructor. */
-        BigFractionMatrixConverter() {
-            super(BigFraction.ZERO);
-        }
-
-        /** {@inheritDoc} */
-        @Override
-        public void start(int rows, int columns,
-                          int startRow, int endRow, int startColumn, int endColumn) {
-            data = new double[rows][columns];
-        }
-
-        /** {@inheritDoc} */
-        @Override
-        public void visit(int row, int column, BigFraction value) {
-            data[row][column] = value.doubleValue();
-        }
-
-        /**
-         * Get the converted matrix.
-         *
-         * @return the converted matrix.
-         */
-        Array2DRowRealMatrix getConvertedMatrix() {
-            return new Array2DRowRealMatrix(data, false);
-        }
+    public static void checkMultiplicationCompatible(final AnyMatrix left, final AnyMatrix right) {
+        left.checkMultiply(right);
     }
 
     /** Serialize a {@link RealVector}.

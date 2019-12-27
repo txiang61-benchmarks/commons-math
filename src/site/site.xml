@@ -51,13 +51,13 @@
          href="http://commons.apache.org/math/javadocs/api-2.2/index.html"/>
       <item name="Issue Tracking" href="/issue-tracking.html"/>
       <item name="Source Repository (current)" 
-         href="http://git-wip-us.apache.org/repos/asf/commons-math.git"/>
+         href="http://gitbox.apache.org/repos/asf/commons-math.git"/>
       <item name="Wiki"  
             href="http://wiki.apache.org/commons/Math"/>
       <item name="Developers Guide" href="/developers.html"/>
       <item name="Proposal" href="/proposal.html"/>
     </menu>
-    
+
     <menu name="User Guide">
       <item name="Contents"                href="/userguide/index.html"/>
       <item name="Overview"                href="/userguide/overview.html"/>
@@ -81,10 +81,9 @@
       <item name="Machine Learning"        href="/userguide/ml.html"/>
       <item name="Exceptions"              href="/userguide/exceptions.html"/>
     </menu>
-    
+
     <head>
-      <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
-      </script>
+      <![CDATA[<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" />]]>
     </head>
 
   </body>

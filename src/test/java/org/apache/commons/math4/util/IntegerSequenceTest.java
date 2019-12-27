@@ -15,6 +15,7 @@ package org.apache.commons.math4.util;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 import org.apache.commons.math4.exception.MaxCountExceededException;
 import org.apache.commons.math4.exception.TooManyEvaluationsException;
 import org.apache.commons.math4.exception.NotStrictlyPositiveException;
@@ -217,6 +218,33 @@ public class IntegerSequenceTest {
         inc.increment(0);
     }
 
+    @Test
+    public void testIncrementTooManyTimes() {
+        final int start = 0;
+        final int max = 3;
+        final int step = 1;
+
+        for (int i = 1; i <= max + 4; i++) {
+            final IntegerSequence.Incrementor inc
+                = IntegerSequence.Incrementor.create()
+                .withStart(start)
+                .withMaximalCount(max)
+                .withIncrement(step);
+
+            Assert.assertTrue(inc.canIncrement(max - 1));
+            Assert.assertFalse(inc.canIncrement(max));
+
+            try {
+                inc.increment(i);
+            } catch (MaxCountExceededException e) {
+                if (i < max) {
+                    Assert.fail("i=" + i);
+                }
+                // Otherwise, the exception is expected.
+            }
+        }
+    }
+
     @Test(expected=ZeroException.class)
     public void testIncrementZeroStep() {
         final int step = 0;
@@ -247,6 +275,29 @@ public class IntegerSequenceTest {
         }
     }
 
+    @Test
+    public void testIteratorNext() {
+        final int start = 1;
+        final int max = 2;
+        final int step = 1;
+
+        final IntegerSequence.Incrementor inc
+            = IntegerSequence.Incrementor.create()
+            .withStart(start)
+            .withMaximalCount(max)
+            .withIncrement(step);
+
+        Assert.assertTrue(inc.hasNext());
+        Assert.assertEquals(1, inc.next().intValue());
+        Assert.assertFalse(inc.hasNext());
+        try {
+            inc.next();
+            Assert.fail("exception expected");
+        } catch (NoSuchElementException e) {
+            // Expected.
+        }
+    }
+
     @Test(expected=TooManyEvaluationsException.class)
     public void testIncrementorAlternateException() {
         final int start = 1;
@@ -269,14 +320,8 @@ public class IntegerSequenceTest {
             .withIncrement(step)
             .withCallback(cb);
 
-        try {
-            // One call must succeed.
-            inc.increment();
-        } catch (RuntimeException e) {
-            Assert.fail("unexpected exception");
-        }
-
-        // Second call must fail.
-        inc.increment();
+        Assert.assertTrue(inc.hasNext());
+        Assert.assertEquals(start, inc.next().intValue());
+        inc.increment(); // Must fail.
     }
 }

@@ -31,7 +31,7 @@ import org.apache.commons.math4.optim.AbstractOptimizationProblem;
 import org.apache.commons.math4.optim.ConvergenceChecker;
 import org.apache.commons.math4.optim.PointVectorValuePair;
 import org.apache.commons.math4.util.FastMath;
-import org.apache.commons.math4.util.Incrementor;
+import org.apache.commons.math4.util.IntegerSequence;
 import org.apache.commons.math4.util.Pair;
 
 /**
@@ -46,7 +46,7 @@ public class LeastSquaresFactory {
 
     /**
      * Create a {@link org.apache.commons.math4.fitting.leastsquares.LeastSquaresProblem}
-     * from the given elements. There will be no weights applied (unit weights).
+     * from the given elements.
      *
      * @param model          the model function. Produces the computed values.
      * @param observed       the observed (target) values
@@ -224,13 +224,13 @@ public class LeastSquaresFactory {
      * @return a least squares problem that tracks evaluations
      */
     public static LeastSquaresProblem countEvaluations(final LeastSquaresProblem problem,
-                                                       final Incrementor counter) {
+                                                       final IntegerSequence.Incrementor counter) {
         return new LeastSquaresAdapter(problem) {
 
             /** {@inheritDoc} */
             @Override
             public Evaluation evaluate(final RealVector point) {
-                counter.incrementCount();
+                counter.increment();
                 return super.evaluate(point);
             }
 
@@ -328,8 +328,7 @@ public class LeastSquaresFactory {
             final double[] p = point.toArray();
 
             // Evaluate.
-            return new Pair<>(computeValue(p),
-                                                    computeJacobian(p));
+            return new Pair<>(computeValue(p), computeJacobian(p));
         }
 
         /** {@inheritDoc} */

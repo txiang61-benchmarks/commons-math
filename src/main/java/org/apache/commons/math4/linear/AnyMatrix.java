@@ -17,31 +17,81 @@
 
 package org.apache.commons.math4.linear;
 
+import org.apache.commons.math4.exception.DimensionMismatchException;
 
 /**
  * Interface defining very basic matrix operations.
+ *
  * @since 2.0
  */
 public interface AnyMatrix {
-
     /**
-     * Is this a square matrix?
-     * @return true if the matrix is square (rowDimension = columnDimension)
-     */
-    boolean isSquare();
-
-    /**
-     * Returns the number of rows in the matrix.
+     * Indicates whether this is a square matrix.
      *
-     * @return rowDimension
+     * @return {@code true} if the number of rows is the same as the number of columns.
+     */
+    default boolean isSquare() {
+        return getRowDimension() == getColumnDimension();
+    }
+
+    /**
+     * Gets the number of rows.
+     *
+     * @return the number of rows.
      */
     int getRowDimension();
 
     /**
-     * Returns the number of columns in the matrix.
+     * Gets the number of columns.
      *
-     * @return columnDimension
+     * @return the number of columns.
      */
     int getColumnDimension();
 
+    /**
+     * Checks that this matrix and the {@code other} matrix can be added.
+     *
+     * @param other Matrix to be added.
+     * @return {@code false} if the dimensions do not match.
+     */
+    default boolean canAdd(AnyMatrix other) {
+        return getRowDimension() == other.getRowDimension() &&
+            getColumnDimension() == other.getColumnDimension();
+    }
+
+    /**
+     * Checks that this matrix and the {@code other} matrix can be added.
+     *
+     * @param other Matrix to check.
+     * @throws IllegalArgumentException if the dimensions do not match.
+     */
+    default void checkAdd(AnyMatrix other) {
+        if (!canAdd(other)) {
+            throw new MatrixDimensionMismatchException(getRowDimension(), getColumnDimension(),
+                                                       other.getRowDimension(), other.getColumnDimension());
+        }
+    }
+
+    /**
+     * Checks that this matrix can be multiplied by the {@code other} matrix.
+     *
+     * @param other Matrix to be added.
+     * @return {@code false} if the dimensions do not match.
+     */
+    default boolean canMultiply(AnyMatrix other) {
+        return getColumnDimension() == other.getRowDimension();
+    }
+
+    /**
+     * Checks that this matrix can be multiplied by the {@code other} matrix.
+     *
+     * @param other Matrix to check.
+     * @throws IllegalArgumentException if the dimensions do not match.
+     */
+    default void checkMultiply(AnyMatrix other) {
+        if (!canMultiply(other)) {
+            throw new DimensionMismatchException(getColumnDimension(),
+                                                 other.getRowDimension());
+        }
+    }
 }
