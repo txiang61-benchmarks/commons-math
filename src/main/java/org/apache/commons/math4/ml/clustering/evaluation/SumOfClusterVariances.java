@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.apache.commons.math4.ml.clustering.Cluster;
 import org.apache.commons.math4.ml.clustering.Clusterable;
+import org.apache.commons.math4.ml.clustering.ClusterEvaluator;
 import org.apache.commons.math4.ml.distance.DistanceMeasure;
 import org.apache.commons.math4.stat.descriptive.moment.Variance;
 
@@ -32,38 +33,56 @@ import org.apache.commons.math4.stat.descriptive.moment.Variance;
  * where n is the number of clusters and \( \sigma_i^2 \) is the variance of
  * intra-cluster distances of cluster \( c_i \).
  *
- * @param <T> the type of the clustered points
  * @since 3.3
  */
-public class SumOfClusterVariances<T extends Clusterable> extends ClusterEvaluator<T> {
+public class SumOfClusterVariances implements ClusterEvaluator {
+    /** The distance measure to use when evaluating the cluster. */
+    private final DistanceMeasure measure;
 
     /**
-     *
-     * @param measure the distance measure to use
+     * @param measure Distance measure.
      */
     public SumOfClusterVariances(final DistanceMeasure measure) {
-        super(measure);
+        this.measure = measure;
     }
 
     /** {@inheritDoc} */
     @Override
-    public double score(final List<? extends Cluster<T>> clusters) {
+    public double score(List<? extends Cluster<? extends Clusterable>> clusters) {
         double varianceSum = 0.0;
-        for (final Cluster<T> cluster : clusters) {
+        for (final Cluster<? extends Clusterable> cluster : clusters) {
             if (!cluster.getPoints().isEmpty()) {
 
-                final Clusterable center = centroidOf(cluster);
+                final Clusterable center = cluster.centroid();
 
                 // compute the distance variance of the current cluster
                 final Variance stat = new Variance();
-                for (final T point : cluster.getPoints()) {
+                for (final Clusterable point : cluster.getPoints()) {
                     stat.increment(distance(point, center));
                 }
-                varianceSum += stat.getResult();
 
+                varianceSum += stat.getResult();
             }
         }
         return varianceSum;
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public boolean isBetterScore(double a,
+                                 double b) {
+        return a < b;
+    }
+
+    /**
+     * Calculates the distance between two {@link Clusterable} instances
+     * with the configured {@link DistanceMeasure}.
+     *
+     * @param p1 the first clusterable
+     * @param p2 the second clusterable
+     * @return the distance between the two clusterables
+     */
+    private double distance(final Clusterable p1, final Clusterable p2) {
+        return measure.compute(p1.getPoint(), p2.getPoint());
+    }
 }

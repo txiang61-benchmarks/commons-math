@@ -82,39 +82,48 @@ public class SplineInterpolator implements UnivariateInterpolator {
         MathArrays.checkOrder(x);
 
         // Differences between knot points
-        final double h[] = new double[n];
+        final double[] h = new double[n];
         for (int i = 0; i < n; i++) {
             h[i] = x[i + 1] - x[i];
         }
 
-        final double mu[] = new double[n];
-        final double z[] = new double[n + 1];
-        mu[0] = 0d;
-        z[0] = 0d;
+        final double[] mu = new double[n];
+        final double[] z = new double[n + 1];
         double g = 0;
-        for (int i = 1; i < n; i++) {
-            g = 2d * (x[i+1]  - x[i - 1]) - h[i - 1] * mu[i -1];
-            mu[i] = h[i] / g;
-            z[i] = (3d * (y[i + 1] * h[i - 1] - y[i] * (x[i + 1] - x[i - 1])+ y[i - 1] * h[i]) /
-                    (h[i - 1] * h[i]) - h[i - 1] * z[i - 1]) / g;
+        int indexM1 = 0;
+        int index = 1;
+        int indexP1 = 2;
+        while (index < n) {
+            final double xIp1 = x[indexP1];
+            final double xIm1 = x[indexM1];
+            final double hIm1 = h[indexM1];
+            final double hI = h[index];
+            g = 2d * (xIp1 - xIm1) - hIm1 * mu[indexM1];
+            mu[index] = hI / g;
+            z[index] = (3d * (y[indexP1] * hIm1 - y[index] * (xIp1 - xIm1)+ y[indexM1] * hI) /
+                        (hIm1 * hI) - hIm1 * z[indexM1]) / g;
+
+            indexM1 = index;
+            index = indexP1;
+            indexP1 = indexP1 + 1;
         }
 
         // cubic spline coefficients --  b is linear, c quadratic, d is cubic (original y's are constants)
-        final double b[] = new double[n];
-        final double c[] = new double[n + 1];
-        final double d[] = new double[n];
+        final double[] b = new double[n];
+        final double[] c = new double[n + 1];
+        final double[] d = new double[n];
 
-        z[n] = 0d;
-        c[n] = 0d;
-
-        for (int j = n -1; j >=0; j--) {
-            c[j] = z[j] - mu[j] * c[j + 1];
-            b[j] = (y[j + 1] - y[j]) / h[j] - h[j] * (c[j + 1] + 2d * c[j]) / 3d;
-            d[j] = (c[j + 1] - c[j]) / (3d * h[j]);
+        for (int j = n - 1; j >= 0; j--) {
+            final double cJp1 = c[j + 1];
+            final double cJ = z[j] - mu[j] * cJp1;
+            final double hJ = h[j];
+            b[j] = (y[j + 1] - y[j]) / hJ - hJ * (cJp1 + 2d * cJ) / 3d;
+            c[j] = cJ;
+            d[j] = (cJp1 - cJ) / (3d * hJ);
         }
 
-        final PolynomialFunction polynomials[] = new PolynomialFunction[n];
-        final double coefficients[] = new double[4];
+        final PolynomialFunction[] polynomials = new PolynomialFunction[n];
+        final double[] coefficients = new double[4];
         for (int i = 0; i < n; i++) {
             coefficients[0] = y[i];
             coefficients[1] = b[i];

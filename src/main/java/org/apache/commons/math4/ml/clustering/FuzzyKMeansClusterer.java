@@ -21,7 +21,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.commons.math4.exception.MathIllegalArgumentException;
 import org.apache.commons.math4.exception.MathIllegalStateException;
 import org.apache.commons.math4.exception.NumberIsTooSmallException;
 import org.apache.commons.math4.linear.MatrixUtils;
@@ -103,7 +102,7 @@ public class FuzzyKMeansClusterer<T extends Clusterable> extends Clusterer<T> {
      * @param fuzziness the fuzziness factor, must be &gt; 1.0
      * @throws NumberIsTooSmallException if {@code fuzziness <= 1.0}
      */
-    public FuzzyKMeansClusterer(final int k, final double fuzziness) throws NumberIsTooSmallException {
+    public FuzzyKMeansClusterer(final int k, final double fuzziness) {
         this(k, fuzziness, -1, new EuclideanDistance());
     }
 
@@ -118,8 +117,7 @@ public class FuzzyKMeansClusterer<T extends Clusterable> extends Clusterer<T> {
      * @throws NumberIsTooSmallException if {@code fuzziness <= 1.0}
      */
     public FuzzyKMeansClusterer(final int k, final double fuzziness,
-                                final int maxIterations, final DistanceMeasure measure)
-            throws NumberIsTooSmallException {
+                                final int maxIterations, final DistanceMeasure measure) {
         this(k, fuzziness, maxIterations, measure, DEFAULT_EPSILON, RandomSource.create(RandomSource.MT_64));
     }
 
@@ -137,9 +135,7 @@ public class FuzzyKMeansClusterer<T extends Clusterable> extends Clusterer<T> {
      */
     public FuzzyKMeansClusterer(final int k, final double fuzziness,
                                 final int maxIterations, final DistanceMeasure measure,
-                                final double epsilon, final UniformRandomProvider random)
-            throws NumberIsTooSmallException {
-
+                                final double epsilon, final UniformRandomProvider random) {
         super(measure);
 
         if (fuzziness <= 1.0d) {
@@ -261,13 +257,12 @@ public class FuzzyKMeansClusterer<T extends Clusterable> extends Clusterer<T> {
      *
      * @param dataPoints the points to cluster
      * @return the list of clusters
-     * @throws MathIllegalArgumentException if the data points are null or the number
-     *     of clusters is larger than the number of data points
+     * @throws org.apache.commons.math4.exception.MathIllegalArgumentException if
+     * the data points are null or the number of clusters is larger than the number
+     * of data points
      */
     @Override
-    public List<CentroidCluster<T>> cluster(final Collection<T> dataPoints)
-            throws MathIllegalArgumentException {
-
+    public List<CentroidCluster<T>> cluster(final Collection<T> dataPoints) {
         // sanity checks
         MathUtils.checkNotNull(dataPoints);
 

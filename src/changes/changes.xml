@@ -54,6 +54,42 @@ If the output is not quite correct, check for invisible trailing spaces!
     </release>
 
     <release version="4.0" date="XXXX-XX-XX" description="">
+      <action dev="erans" type="fix" issue="MATH-1531">
+        "EmpiricalDistribution": Workaround to avoid spurious exception.
+      </action>
+      <action dev="erans" type="update" issue="MATH-1530" due-to="Yassine Damerdji">
+        "SplineInterpolator": Improved performance.
+      </action>
+      <action dev="erans" type="add" issue="MATH-1529">
+        "AkimaSplineInterpolator": Option to use alternative weights.
+      </action>
+      <action dev="erans" type="add" issue="MATH-1509" due-to="Chen Tao">
+        Add "MiniBatchKMeansClusterer" clustering algorithm.
+      </action>
+      <action dev="erans" type="update" issue="MATH-1524" due-to="Chen Tao">
+        Code reuse.
+      </action>
+      <action dev="erans" type="fix" issue="MATH-1511">
+        Issue in site generation and developers documentation.
+      </action>
+      <action dev="erans" type="update" issue="MATH-1522" due-to="Chen Tao">
+        Remove generic parameter in clustering evaluator interfaces.
+      </action>
+      <action dev="erans" type="add" issue="MATH-1519" due-to="Chen Tao">
+        Add "Calinski-Harabsz" clustering evaluator.
+      </action>
+      <action dev="erans" type="update" issue="MATH-1523">
+        Abstract class "ClusterEvaluator" replaced by an interface.
+      </action>
+      <action dev="erans" type="fix" issue="MATH-1518">
+        Remove code duplication by moving method to class "Cluster".
+      </action>
+      <action dev="erans" type="add" issue="MATH-1516">
+        Interface for ranking a list of clusters.
+      </action>
+      <action dev="kinow" type="update" issue="MATH-1408">
+        Do not use exceptions for control flow
+      </action>
       <action dev="erans" type="fix" issue="MATH-1388">
         Avoid overflow.
       </action>

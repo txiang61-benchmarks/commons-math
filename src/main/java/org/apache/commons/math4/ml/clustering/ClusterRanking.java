@@ -14,11 +14,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package org.apache.commons.math4.ml.clustering;
+
+import java.util.List;
+
 /**
- * Cluster evaluation methods.
- *
- * All evaluators should implement the
- * {@link org.apache.commons.math4.ml.clustering.ClusterEvaluator}
- * interface.
+ * Evaluates the quality of a set of clusters.
+ * It is assumed that
+ * <ul>
+ *  <li>rank is positive,</li>
+ *  <li>higher rank means better clustering.</li>
+ * </ul>
  */
-package org.apache.commons.math4.ml.clustering.evaluation;
+@FunctionalInterface
+public interface ClusterRanking {
+    /**
+     * Computes the rank (higher is better).
+     *
+     * @param clusters Clusters to be evaluated.
+     * @return the rank of the provided {@code clusters}.
+     */
+    double compute(List<? extends Cluster<? extends Clusterable>> clusters);
+}

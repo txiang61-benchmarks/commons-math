@@ -18,10 +18,8 @@ package org.apache.commons.math4.analysis.integration;
 
 import org.apache.commons.math4.analysis.UnivariateFunction;
 import org.apache.commons.math4.analysis.solvers.UnivariateSolverUtils;
-import org.apache.commons.math4.exception.MathIllegalArgumentException;
 import org.apache.commons.math4.exception.MaxCountExceededException;
 import org.apache.commons.math4.exception.NotStrictlyPositiveException;
-import org.apache.commons.math4.exception.NullArgumentException;
 import org.apache.commons.math4.exception.NumberIsTooSmallException;
 import org.apache.commons.math4.exception.TooManyEvaluationsException;
 import org.apache.commons.math4.util.IntegerSequence;
@@ -46,6 +44,8 @@ public abstract class BaseAbstractUnivariateIntegrator implements UnivariateInte
     /** Default maximal iteration count. */
     public static final int DEFAULT_MAX_ITERATIONS_COUNT = Integer.MAX_VALUE;
 
+    /** The iteration count. */
+    protected IntegerSequence.Incrementor iterations;
 
     /** Maximum absolute error. */
     private final double absoluteAccuracy;
@@ -57,9 +57,6 @@ public abstract class BaseAbstractUnivariateIntegrator implements UnivariateInte
     private final int minimalIterationCount;
     /** maximum number of iterations */
     private final int maximalIterationCount;
-
-    /** The iteration count. */
-    protected IntegerSequence.Incrementor iterations;
 
     /** The functions evaluation count. */
     private IntegerSequence.Incrementor evaluations;
@@ -227,8 +224,10 @@ public abstract class BaseAbstractUnivariateIntegrator implements UnivariateInte
      * @param f the integrand function
      * @param lower the min bound for the interval
      * @param upper the upper bound for the interval
-     * @throws NullArgumentException if {@code f} is {@code null}.
-     * @throws MathIllegalArgumentException if {@code min >= max}.
+     * @throws org.apache.commons.math4.exception.NullArgumentException
+     * if {@code f} is {@code null}.
+     * @throws org.apache.commons.math4.exception.MathIllegalArgumentException
+     * if {@code min >= max}.
      */
     protected void setup(final int maxEval,
                          final UnivariateFunction f,

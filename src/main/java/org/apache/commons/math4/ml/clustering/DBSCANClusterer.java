@@ -25,7 +25,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.math4.exception.NotPositiveException;
-import org.apache.commons.math4.exception.NullArgumentException;
 import org.apache.commons.math4.ml.distance.DistanceMeasure;
 import org.apache.commons.math4.ml.distance.EuclideanDistance;
 import org.apache.commons.math4.util.MathUtils;
@@ -80,8 +79,7 @@ public class DBSCANClusterer<T extends Clusterable> extends Clusterer<T> {
      * @param minPts minimum number of points needed for a cluster
      * @throws NotPositiveException if {@code eps < 0.0} or {@code minPts < 0}
      */
-    public DBSCANClusterer(final double eps, final int minPts)
-        throws NotPositiveException {
+    public DBSCANClusterer(final double eps, final int minPts) {
         this(eps, minPts, new EuclideanDistance());
     }
 
@@ -93,8 +91,7 @@ public class DBSCANClusterer<T extends Clusterable> extends Clusterer<T> {
      * @param measure the distance measure to use
      * @throws NotPositiveException if {@code eps < 0.0} or {@code minPts < 0}
      */
-    public DBSCANClusterer(final double eps, final int minPts, final DistanceMeasure measure)
-        throws NotPositiveException {
+    public DBSCANClusterer(final double eps, final int minPts, final DistanceMeasure measure) {
         super(measure);
 
         if (eps < 0.0d) {
@@ -126,13 +123,11 @@ public class DBSCANClusterer<T extends Clusterable> extends Clusterer<T> {
     /**
      * Performs DBSCAN cluster analysis.
      *
-     * @param points the points to cluster
-     * @return the list of clusters
-     * @throws NullArgumentException if the data points are null
+     * @param points Points to cluster (cannot be {@code null}).
+     * @return the list of clusters.
      */
     @Override
-    public List<Cluster<T>> cluster(final Collection<T> points) throws NullArgumentException {
-
+    public List<Cluster<T>> cluster(final Collection<T> points) {
         // sanity checks
         MathUtils.checkNotNull(points);
 
